@@ -1,11 +1,14 @@
-l=[1,3,5,89,56,10,9,8]
-x=l[int(len(l)/2)]
-count = 0
-while x != 0: 
-    x //= 10
-    count+= 1
-print(count) 
-if count==2:  
-    print(l[3:]+l[:3])
-else:
-  print("error")
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Dec 16 19:53:21 2019
+
+@author: sivan
+"""
+
+is_learning=True
+while is_learning:
+    user=input("are you learning")
+    is_learning=user=="yes"
+    is_learning=False
+    #print("learning")
+print("fc")

@@ -1,6 +1,3 @@
-l=[1,2,23,12,5]
-if l==sorted(l):
-    print("sorted")
-else:
-    l.sort()
-    print(l)
+a=[str(x) for x in input().split()]
+words = a.split()
+words.sort()

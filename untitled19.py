@@ -1,12 +1,14 @@
-s="my marks are 1010101"
-sum=0
-for e in s:
-    if(e.isdigit()==True):
-        sum=(sum*2)+int(e)
-for e in s:
-    if(e.isdigit()==False):
-        print(e,end="")
-    else:
-        print(sum)
-        break
-    
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Dec 12 19:13:05 2019
+
+@author: sivan
+"""
+
+m=int(input())
+n=int(input())
+i=0
+for i in range(m*n):
+    i+=1
+    x=m*m+i
+    print(x)

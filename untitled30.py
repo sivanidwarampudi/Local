@@ -1,5 +1,14 @@
-def binary(n):
-    if n==0 or n==1:
-        return str(n)
-    else:
-        return binary(n//2)+str(n%2)
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Dec 17 11:58:07 2019
+
+@author: sivan
+"""
+
+import sys
+li=[]
+for p in sys.argv[1:]:
+    li+=eval(p)
+li.sort()
+print(li)
+    

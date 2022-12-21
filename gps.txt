@@ -1,0 +1,221 @@
+char data,a[70],num[10],sms[160];
+int i=0,m=0,j=0,k=0,l=0;
+ #include <TinyGPS++.h>  
+ 
+#include <SoftwareSerial.h>
+#include <String.h>
+TinyGPSPlus gps;                                  // Create an Instance of the TinyGPS++ object called gps
+SoftwareSerial ss(2,3);
+#include <LiquidCrystal.h>
+#include <Servo.h>
+Servo myservo;float flat=16.522378,flon=80.669185;
+LiquidCrystal lcd(7,8,9,10,11,12);
+long lat,lon; // create variable for latitude and longitude object
+
+
+SoftwareSerial mySerial(4,5);
+void setup() {  myservo.attach(6);
+ pinMode(13,OUTPUT); 
+ Serial.begin(9600);delay(2000); ss.begin(9600);mySerial.begin(9600);
+ lcd.begin(16,2);
+ lcd.clear();delay(2000);
+    lcd.setCursor(3,0);
+  lcd.print("SMART VEHICLE");
+  lcd.setCursor(1,1);
+  lcd.print("SECURITY SYSTEM");
+  mySerial.println("Hello, world?");
+
+  delay(10);
+Serial.print("GPS instaling.,.,.,.\r\n");
+//gps();
+
+Serial.print("GPS instaled\r\n"); myservo.write(0);    
+sms_rx();
+gp();
+}
+void loop()
+{Serial.print("123\r\n");
+nu();Serial.print("456\r\n");
+chek();
+  }
+void chek()
+{Serial.println(sms);
+   if(sms[0]=='L'&&sms[1]=='C')
+  {
+ gps_tx();lcd.clear();
+    lcd.setCursor(3,0);
+delay(3000); lcd.clear();
+    lcd.setCursor(3,0);
+  lcd.print("SMART VEHICLE");
+  lcd.setCursor(1,1);
+  lcd.print("SECURITY SYSTEM");
+  } 
+ 
+  else if(sms[0]=='G'&&sms[1]=='O')
+  {
+    sms_tx();//myservo.write(0); 
+    } 
+    
+    else if(sms[0]=='P'&&sms[1]=='H')
+  {
+  ph();Serial.print("ph");
+    digitalWrite(13,HIGH);//myservo.write(0); 
+    }
+     
+     
+     else if(sms[0]=='E'&&sms[1]=='M'&&sms[2]=='Y')
+  {myservo.write(90);lcd.clear();
+    lcd.setCursor(3,0);
+  lcd.print("VEHICLE STOP"); gps_tx(); 
+ 
+    }
+    
+    
+    else if(sms[0]=='O'&&sms[1]=='N')
+  {myservo.write(0);  lcd.clear();
+    lcd.setCursor(3,0);
+  lcd.print("VEHICLE START");delay(2000);lcd.clear();
+    lcd.setCursor(3,0);
+  lcd.print("SMART VEHICLE");
+  lcd.setCursor(1,1);
+  lcd.print("SECURITY SYSTEM");
+ 
+    }
+    else{
+    wrong();
+    }
+  }
+    
+   void ph()
+   {mySerial.println("ATH");delay(2000);
+    mySerial.println("ATD+917989641224;");
+    } 
+ void sms_rx()
+{
+  mySerial.print("AT+CMGF=1\r\n");
+  delay(500);
+  mySerial.print("AT+CNMI=2,2,0,0,0\r\n"); delay(500);Serial.print("rx\r\n");
+}
+void sms_tx()
+{gp();
+  mySerial.print("AT+CMGF=1\r\n");
+  delay(500);
+  mySerial.print("AT+CMGS=\"");
+  for(i=0;i<10;i++)
+  {
+    mySerial.write(num[i]);Serial.write(num[i]);
+  }
+  mySerial.print("\"\r\n");
+  delay(500);
+  for(i=0;i<j-1;i++)
+  {
+   mySerial.write(sms[i]); Serial.write(sms[i]);
+  }
+  mySerial.write(0x1a);
+  mySerial.write(0x0a);
+  delay(100);
+ mySerial.print("\r\n");
+  delay(1000);Serial.print("sms");
+}
+
+  void nu()
+  {
+   
+    do{rx1();}while(data!='+');
+    do{rx1();}while(data!='"');
+    do{rx1();}while(data!='+');
+    do{rx1();}while(data!='9');
+    do{rx1();}while(data!='1');Serial.print("3\r\n");
+        for(i=0;i<10;i++)
+            {
+                rx1();
+                num[i]=data;
+            }
+        for(i=0;i<5;i++)
+            {
+            do{rx1();}while(data!='"');
+            }
+        do{rx1();}while(data!='*');
+                   
+        for(j=0;data!='#';j++)
+            {
+              rx1();
+              sms[j]=data;
+            }
+}
+void rx1()
+{Serial.print("1\r\n");
+  while(mySerial.available()==0);Serial.print("2\r\n");
+  data=mySerial.read();
+}
+
+
+
+
+
+  void gp(){
+flat=gps.location.lat();
+  flon=gps.location.lng();
+  Serial.print("Latitude  : ");
+  Serial.println(flat, 6);
+  Serial.print("Longitude : ");
+  Serial.println(flon, 6);
+  smartDelay(1000);
+  if (millis() > 5000 && gps.charsProcessed() < 10)
+    Serial.println(F("No GPS data received: check wiring"));flat=16.522378,flon=80.669185;
+}
+
+static void smartDelay(unsigned long ms)                // This custom version of delay() ensures that the gps object is being "fed".
+{
+  unsigned long start = millis();
+  do 
+  {
+    while (ss.available())
+      gps.encode(ss.read());
+  } while (millis() - start < ms);
+
+  
+}
+  void gps_tx()
+{gp();
+  mySerial.print("AT+CMGF=1\r\n");
+  delay(500);
+  mySerial.print("AT+CMGS=\"");
+  for(i=0;i<10;i++)
+  {
+    mySerial.write(num[i]);
+  }
+  mySerial.print("\"\r\n");
+  delay(500);
+ mySerial.print("Iam in Danger Please save me Trace Location http://maps.google.com/maps?&z=15&mrt=yp&t=k&q="); mySerial.print(flat,6); mySerial.print("+"); mySerial.print(flon,6);
+  lcd.clear();lcd.setCursor(0,0);
+  lcd.print("Lat :");
+  lcd.print(flat,6);
+  lcd.setCursor(0,1);
+  lcd.print("Long:"); lcd.print(flon,6);
+mySerial.write(0x1a);
+  mySerial.write(0x0a);
+  delay(100);
+  mySerial.print("\r\n");
+  delay(1000);
+}
+void wrong()
+{
+  mySerial.print("AT+CMGF=1\r\n");
+  delay(500);
+  mySerial.print("AT+CMGS=\"");
+  for(i=0;i<10;i++)
+  {
+    mySerial.write(num[i]);
+  }
+  mySerial.print("\"\r\n");
+  delay(500);
+  
+  mySerial.print("YOU SEND WRONG TEXT *lc#-location,*go#-text retun");
+  delay(500);
+  mySerial.write(0x1a);
+  mySerial.write(0x0a);
+  delay(100);
+  mySerial.print("\r\n");
+  delay(1000);
+}

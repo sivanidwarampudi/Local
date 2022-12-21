@@ -1,3 +1,8 @@
-l=[1,2.2,'f',True]
-for i in range(len(l)):
-    print(l[i],type(l[i]))
+def flatten(S):
+    if S == []:
+        return S
+    if isinstance(S[0], list):
+        return flatten(S[0]) + flatten(S[1:])
+    return S[:1] + flatten(S[1:])
+s=[[1,2],[3,4]]
+print("Flattened list is: ",flatten(S))
