@@ -1,0 +1,68 @@
+CPL 3- 1 User based on number of rides
+ Display the users who have offered more than or equal two rides in a Month
+
+SELECT USER_DETAILS.* FROM USER_DETAILS WHERE USER_ID
+ IN (SELECT RIDE_PROVIDER_ID FROM CARPOOLING.RIDE
+ GROUP BY RIDE_PROVIDER_ID, EXTRACT(MONTH FROM (START_ON))
+ HAVING COUNT(*) >= 2);
+
+CPL 3- 2 Rides base on date
+Display the rides on 25/11/20
+
+SELECT * FROM CARPOOLING.RIDE
+WHERE TO_CHAR(START_ON, 'DD/MM/YY') = '25/11/20';
+
+CPL 3- 3 Rides and user details
+Display all the details of user and the ride who have offered at least one ride
+ SELECT u.*, r.* FROM USER_DETAILS u, ride r
+ WHERE u.user_id = r.ride_provider_id;
+
+
+CPL 3- 5 Favourite Ride Provider
+ Fetch the ride provider details whose rides were mostly used by the users
+ SELECT * FROM USER_DETAILS
+ WHERE USER_ID IN(SELECT RIDE_PROVIDER_ID FROM RIDE
+                  WHERE RIDE_ID IN
+                  (SELECT RIDE_ID FROM RIDE_USERS
+                   GROUP BY RIDE_ID
+                   HAVING COUNT(*) = (SELECT MAX(COUNT(*)) FROM RIDE_USERS GROUP BY RIDE_ID)) );
+
+CPL 3- 6 Ride Provider- with no rides
+Identify the user who have offered but have not started the ride even once
+SELECT U.* FROM USER_DETAILS U, RIDE R
+ WHERE U.USER_ID = R.RIDE_PROVIDER_ID
+ AND RIDE_PROVIDER_ID NOT IN(SELECT RIDE_PROVIDER_ID FROM RIDE 
+                              WHERE ISSTARTED = 'yes');
+
+
+CPL 3- 7 Users with no rides offered
+Fetch the user information who has not offered any ride.
+SELECT *  FROM USER_DETAILS
+ WHERE USER_ID NOT IN (SELECT RIDE_PROVIDER_ID FROM RIDE);
+
+
+
+
+CPL 3- 8 Rides on 25th Nov
+Display the user information and Ride information for the ride id/s which was offered on 25th of Nov 2020
+select user_details.*, ride.*
+ from user_details,ride_users,ride 
+ where ride.ride_id=ride_users.ride_id 
+ and ride_users.user_id=user_details.user_id 
+ and to_char(start_on,'dd-Mon-yy')='25-Nov-20'
+ order by user_details.user_id;
+
+CPL 3- 9 Users with their Ride Information
+SELECT U.*, R.* FROM USER_DETAILS U, RIDE R, RIDE_USERS RU
+WHERE U.USER_ID = RU.USER_ID(+)
+AND RU.RIDE_ID = R.RIDE_ID(+);
+
+
+CPL 3- 10 Ride providers of the month
+Display the users whose rides are maximum for the month.
+SELECT * FROM USER_DETAILS
+WHERE USER_ID IN
+(SELECT RIDE_PROVIDER_ID FROM RIDE GROUP BY RIDE_PROVIDER_ID
+HAVING COUNT(*) =(SELECT MAX(COUNT(*)) FROM RIDE
+WHERE TO_CHAR(START_ON,'MON-YY') = 'DEC-20'
+GROUP by RIDE_PROVIDER_ID));

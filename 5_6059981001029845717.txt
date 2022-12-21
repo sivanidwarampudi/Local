@@ -1,0 +1,118 @@
+
+CPL 5-2 Rides based on the user
+Display all the rides taken by the user "Krithik"
+ select r.ride_id, from_location, to_location, seats_left, seats_total,
+ ride_provider_id, start_on, ends_on, isstarted, isfinished from ride r
+ join ride_users u
+ on r.ride_id = u.ride_id
+ where u.user_id in 
+ (
+ select user_id from user_details
+  where first_name LIKE '%Krithik%'
+ );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CPL 5-3 Rides on Bangalore
+Display the users whose rides to location is in  “Bangalore/Bangalore Airport /Electronic City”.
+
+ SELECT U.* FROM USER_DETAILS U
+ WHERE EXISTS(SELECT USER_ID FROM RIDE_USERS RU, RIDE R
+                WHERE RU.RIDE_ID = R.RIDE_ID
+                AND R.TO_LOCATION IN('Bangalore', 'Bangalore Airport', 'Electronic City'));

@@ -1,0 +1,43 @@
+CPL 4-1 Max Rides in a month
+ Display number of rides and the month when the maximum number of rides were offered 
+SELECT TO_CHAR(START_ON, 'MON-YY'), count(*)
+ FROM RIDE
+ GROUP BY TO_CHAR(START_ON, 'MON-YY') 
+ HAVING COUNT(*) = (SELECT MAX(COUNT(RIDE_ID)) FROM RIDE
+                    GROUP BY TO_CHAR(START_ON, 'MON-YY'));
+
+CPL 4-2
+SELECT MAX((ENDS_ON- START_ON)) FROM RIDE
+ Fetch the rides which travel has maximum duration 
+SELECT * FROM RIDE
+ WHERE (ENDS_ON-START_ON) = (SELECT MAX((ENDS_ON- START_ON)) FROM RIDE);
+
+CPL 4-3 Rides with no seats left
+Fetch the rides for which ride seats were full.
+SELECT * FROM RIDE
+ WHERE SEATS_LEFT = 0;
+
+CPL 4-4 Top 3 Users
+Identify the top 3 users who have booked more number of rides.
+select d.* from user_details d,
+( select user_id, total_ride
+from (select user_id, count(*) total_ride
+from ride_users
+group by user_id
+order by total_ride desc)
+where rownum <= 3) a
+where a.user_id = d.user_id;
+
+
+CPL 4-5 Top 2 Users based rides offered
+ Identify the top 2 preferred users in descending order who offered rides
+
+select * from user_details
+ where user_id in (
+ select user_id from (
+ select user_id, count(*) from user_details d, ride r
+ where r.ride_provider_id = d.user_id 
+ group by user_id
+ order by count(*) desc
+ )
+ where rownum between 1 and 2);
