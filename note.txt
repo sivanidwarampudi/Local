@@ -1,0 +1,8 @@
+hex to int conversion
+print(int(0xdeadbeef))
+3735928559
+int to hex bin oct use hex() oct() etc
+bitwise complement of integer
+x=-x-1
+20=-20-1
+ ~x is bitwise notation
